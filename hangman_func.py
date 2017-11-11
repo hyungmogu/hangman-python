@@ -2,17 +2,17 @@ import subprocess as sp
 import platform as pltf
 import re
 
-def play_game(num_of_lives, secret_phrase, hidden_phrase):
+# def play_game(num_of_lives, secret_phrase, hidden_phrase):
 
-    while not game_is_over(num_of_lives, hidden_phrase, secret_phrase):
+#     while not game_is_over(num_of_lives, hidden_phrase, secret_phrase):
 
-        guess = make_a_guess()
-        made_correct_guess = compare_guess(guess, secret_phrase)
-        update_hidden_phrase(guess, num_of_lives, hidden_phrase, secret_phrase, made_correct_guess)
-        num_of_lives = update_num_of_lives()
-        clear_screen()
-        show_gallow(num_of_lives)
-        show_hidden_phrase(hidden_phrase)
+#         guess = make_a_guess()
+#         made_correct_guess = compare_guess(guess, secret_phrase)
+#         update_hidden_phrase(guess, num_of_lives, hidden_phrase, secret_phrase, made_correct_guess)
+#         num_of_lives = update_num_of_lives()
+#         clear_screen()
+#         show_gallow(num_of_lives)
+#         show_hidden_phrase(hidden_phrase)
 
 
 def display_result(num_of_lives, hidden_phrase, secret_phrase):
@@ -49,7 +49,7 @@ def create_secret_phrase():
     while not exit_prompt:
         user_input = (input("Enter secret phrase: ")).strip()
         
-        if not is_valid(user_input):
+        if not is_secret_phrase_valid(user_input):
             print("Error: Make sure the input is a phrase of letters")
         else:
             exit_prompt = True
@@ -58,7 +58,7 @@ def create_secret_phrase():
     return [x.lower() for x in user_input]
 
 
-def is_valid(secret_phrase):
+def is_secret_phrase_valid(secret_phrase):
 
     pattern = r"[^a-zA-Z]"
     match = re.match(pattern, secret_phrase)

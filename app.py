@@ -154,6 +154,7 @@
                 - in the beginning of the function, it prompts user to enter the secret phrase
                 - if the secret phrase is composed of something other than letters, then error is called and user is prompted to try again
                 - at the end of the function, the secret phrase in the form of an array is returned
+                - all elements in the array must be lowecase letters
                 - the array includes spaces
 
                 given the requirements, the method can be subdivided into following sub-components
@@ -166,15 +167,15 @@
                     while(!exit_prompt):
                         user_input = (input("Enter Secret Phrase: ")).strip()
                         
-                        if(!is_valid(user_input)):
+                        if(!is_secret_phrase_valid(user_input)):
                             print("Error: Make sure the input is a phrase")
                         else:
                             exit_prompt = True
 
                 
-                    return [x for x in user_input]
+                    return [x.lower() for x in user_input]
 
-            is_valid(secret_phrase)
+            is_secret_phrase_valid(secret_phrase)
             -----------------------
                 - at the end of the function, it returns boolean value
                 - it returns true if there is more than one character and all chars are letters
@@ -182,7 +183,7 @@
 
                 import re
 
-                def is_valid(secret_phrase)
+                def is_secret_phrase_valid(secret_phrase)
 
                     pattern = r"[^A-Za-z]"
                     match = re.match(pattern, str)
@@ -453,27 +454,51 @@
 
                     return made_correct_guess
 
-            update_game(guess, num_of_lives, hidden_phrase, made_correct_guess)
-            -------------------------------------------------------------------
-                - At the end of the function, nothing is returned but values in hidden_phrase and num of lives is updated
-                - If made_correct_guess == True, then hypens in hidden_phrase are replaced with the 
-                  corresponding values of guess in secret_phrase
-                - If made_correct_guess == False, then num_of_lives is decremented
 
+            update_hidden_phrase(secret_phrase)
+            -----------------------------------
+                - At the end of the function, nothing is returned but values in hidden_phrase is updated
+                - If made_correct_guess == True, it returns a list with one or more hypens replaced
+                  with the value of guess at the corresponding position in secret_phrase    
+
+                  i.e.
+                
+                  guess = 'l'
+                  secret_phrase = ['h','e','l','l','o']
+
+                  ['-','-','-','-','-'] --> ['-','-','l','l','-']
+
+                    
                 based on the requirement, the function is defined as the following:
 
 
-                def update_game(guess, num_of_lives, hidden_phrase, secret_phrase, made_correct_guess):
-
-                    if(made_correct_guess):
+                def update_hidden_phrase(made_correct_guess, guess, secret_phrase, hidden_phrase):
+                    if made_correct_guess :
                         i = 0
                         n = len(secret_phrase)
-                        while(i < n):
-                            if (secret_phrase[i] == guess):
+                        while i < n:
+                            if secret_phrase[i] == guess:
                                 hidden_phrase[i] = guess
-                            i++
-                    else:
-                        num_of_lives--
+                            i += 1
+
+
+            update_num_of_lives(num_of_lives, made_correct_guess)
+            -----------------------------------------------------
+
+                - At the end of the function, it returns updated value of num_of_lives
+                - The function returns num_of_lives, if user made correct guess
+                - The function returns decremented value of num of lives, if user made incorrect guess
+
+                based on the requirement, the function is defined as the following:
+
+                def update_num_of_lives(made_correct_guess, num_of_lives):
+
+                    if not made_correct_guess:
+
+                        num_of_lives -= 1
+
+                    return num_of_lives
+            
 
             game_is_over(num_of_lives, hidden_phrase, secret_phrase)
             ------------------------------------------------------------
@@ -530,7 +555,6 @@ import hangman_func as hf
 
 exit_game = False
 
-#clear current screen
 hf.clear_screen()
 
 while not exit_game:
@@ -544,6 +568,7 @@ while not exit_game:
     hf.show_hidden_phrase(hidden_phrase)
 
     # play game
+    # I did this and not as a function because num_of_lives is immutable and cannot be passed by reference
     while not hf.game_is_over(num_of_lives, hidden_phrase, secret_phrase):
 
         guess = hf.make_a_guess()
@@ -554,7 +579,6 @@ while not exit_game:
         hf.show_gallow(num_of_lives)
         hf.show_hidden_phrase(hidden_phrase)
 
-    #play_game(num_of_lives, secret_phrase, hidden_phrase)
     hf.display_result(num_of_lives, hidden_phrase, secret_phrase)
 
     if not hf.play_game_again():
