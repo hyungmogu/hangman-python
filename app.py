@@ -79,11 +79,11 @@
 
 				while(game_is_not_over(num_of_lives, hidden_phrase, secret_phrase)):
 
-					guess = make_a_guess()
-					made_correct_guess = compare_guess(guess, secret_phrase, hidden_phrase, num_of_lives)
-					update_game(guess, num_of_lives, hidden_phrase, made_correct_guess)
-					show_gallow(num_of_lives)
-					show_hidden_phrase(hidden_phrase)
+					guess = make_a_guess() x
+					made_correct_guess = compare_guess(guess, secret_phrase) x
+					update_game(guess, num_of_lives, hidden_phrase, secret_phrase made_correct_guess) x
+					show_gallow(num_of_lives) x
+					show_hidden_phrase(hidden_phrase) x
 
 
 		display result
@@ -371,7 +371,7 @@
 				Understanding cases:
 				--------------------
 
-				1. User registers input other than letters (i.e. integers and special symbols like @)
+				1. User registers input other than lower case letters (i.e. integers and special symbols like @)
 					
 					1.1. Prompt user to type again
 
@@ -386,7 +386,7 @@
 						2.2.1. return guess
 
 			
-				based on the requirement cases, the function can be defined as the following:
+				based on the requirement and cases, the function can be defined as the following:
 
 
 				def make_a_guess():
@@ -395,10 +395,69 @@
 					guess = ''
 
 					while(!exit_prompt)
-						guess = input("Enter a guess ()")
+						guess = (input("Enter a guess (a-z): ")).strip()
 
+						if (len(guess) != 1):
+							print("Error: Please make sure the entered input has only one character.")
+							continue
+
+						if (!(ord(guess) >= 97 and ord(guess) <= 122)):
+							print("Error: Please make sure the entered input is a lowercase letter (a-z)")
+							continue
+
+						exit_prompt = True
 
 					return guess
+
+
+			compare_guess(guess, secret_phrase)
+			-----------------------------------
+				- At the end of the function, it returns boolean value
+				- If correct guess is made, then the returned value is True 
+				- If incorrect guess is made, then the returned value is False
+				- A correct guess is made when the value in guess exists in secret phrase
+				- An incorrect guess is made when there value in guess doesn't exist in secret phrase
+
+
+
+				based on the requirements, the function can be defined as the following:
+
+
+				def compare_guess(guess, secret_phrase):
+
+					made_correct_guess = False
+
+
+					for (character in secret_phrase):
+						if(character == guess):
+							made_correct_guess = True
+							break 
+
+					return made_correct_guess
+
+
+			update_game(guess, num_of_lives, hidden_phrase, made_correct_guess)
+			-------------------------------------------------------------------
+				- At the end of the function, nothing is returned but values in hidden_phrase and num of lives is updated
+				- If made_correct_guess == True, then hypens in hidden_phrase are replaced with the 
+				  corresponding values of guess in secret_phrase
+				- If made_correct_guess == False, then num_of_lives is decremented
+
+				based on the requirement, the function is defined as the following:
+
+
+				def update_game(guess, num_of_lives, hidden_phrase, secret_phrase, made_correct_guess):
+
+					if(made_correct_guess):
+						i = 0
+						n = len(secret_phrase)
+						while(i < n):
+							if (secret_phrase[i] == guess):
+								hidden_phrase[i] = guess
+							i++
+					else:
+						num_of_lives--
+
 
 			
 '''
