@@ -59,10 +59,10 @@
 
 			num_of_lives = 6
 			secret_phrase = create_secret_phrase()
-			hidden_phrase = generate_hidden_phrase(secret_phrase)
-			clear_screen()
-			show_gallow(num_of_lives)
-			show_hidden_phrase(hidden_phrase)
+			hidden_phrase = generate_hidden_phrase(secret_phrase) x
+			clear_screen() x
+			show_gallow(num_of_lives) x
+			show_hidden_phrase(hidden_phrase) x
 			
 
 		play game
@@ -80,7 +80,8 @@
 				while(game_is_not_over(num_of_lives, hidden_phrase, secret_phrase)):
 
 					guess = make_a_guess()
-					result = compare_guess(guess, secret_phrase, hidden_phrase, num_of_lives)
+					made_correct_guess = compare_guess(guess, secret_phrase, hidden_phrase, num_of_lives)
+					update_game(guess, num_of_lives, hidden_phrase, made_correct_guess)
 					show_gallow(num_of_lives)
 					show_hidden_phrase(hidden_phrase)
 
@@ -118,6 +119,288 @@
 			- if 'y', return true
 			- if 'n', return false
 
+			the above pseudocode can be turned into the following python syntax
+
+
+			def play_again():
+
+				exit_prompt = False
+				response = ''
+
+				while(!exit_prompt): 
+					response = input("Would you like to play game again? (y|n): ")
+					
+					if (!(response == 'y' or response == 'n')):
+						print("Error: please make sure response is either y or n")
+						continue
+
+					exit_prompt = True
+
+				if (response == "y"):
+					return True
+
+				elif (response == "n"):
+					return False
+
+
+	step 3
+	------		
+
+		initialize_game
+		---------------
+
+			create_secret_phrase() 
+			----------------------
+				- in the beginning of the function, it prompts user to enter the secret phrase
+				- if the secret phrase is composed of something other than letters, then error is called and user is prompted to try again
+				- at the end of the function, the secret phrase in the form of an array is returned
+				- the array includes spaces
+
+				given the requirements, the method can be subdivided into following sub-components
+
+				create_secret_phrase():
+
+					exit_prompt = False
+					response = ""
+
+					while(!exit_prompt):
+						user_input = input("Enter Secret Phrase: ")
+						
+						if(!is_valid(user_input)):
+							print("Error: Make sure the input is a phrase")
+						else:
+							exit_prompt = True
+
+				
+					return [x for x in user_input]
+			
+			
+			generate_hidden_phrase(secret_phrase)
+			-------------------------------------
+				- the secret_phrase is an array of letters.
+				- the size of array is greater than 1
+				- at the end of the method, an array is returned with letters in secret phrase replaced with hypen
+
+				given the requirements, the function can be written as the following
+
+
+				def generate_hidden_phrase(secret_phrase):
+
+					output = []
+
+					for i in secret_phrase:
+						if(i != ' '):						
+							output.append('-')		
+						else:
+							output.append(' ')
+
+					return output
+
+
+			clear_screen()
+			--------------
+				- At the end of the function, the current screen on command prompt is cleared
+
+
+
+				understanding cases:
+				--------------------
+
+				1. the os of the machine where this code is run is window
+
+					1.1 clear screen using command based on window
+
+				2. the os of the machine where this code is run is linux
+
+					2.1 clear screen using command based on linux / mac os
+
+
+				given the requirement and cases, the function can be written as the following
+
+
+				import subprocess as sp
+				import platform as pltf
+
+
+				clear_screen()
+
+					if pltf.system() == "Linux" or pltf.system == "Darwin": # if the operating system is Linux or Mac OS
+						sp.call("clear", shell = True)
+
+					else: #if the operating system is windows
+						sp.call('cls')
+
+				
+
+				Note: the above solutions are referenced from the following sites:
+					- https://stackoverflow.com/questions/18937058/clear-screen-in-shell 
+					- https://stackoverflow.com/questions/16721940/why-when-use-sys-platform-on-mac-os-it-print-darwin 			
+
+
+
+			show_gallow(num_of_lives)
+				- at the end of the function, it prints a gallow with different set of body parts based on the nubmer of lives
+
+					- if num lives == 6, no body parts are shown
+					- if num_of_lives == 5, head is shown
+					- if num_of_lives == 4, head and body are shown
+					- if num_of_lives == 3, head, body and left arm are shwon
+					- if num_of_lives == 2, head, body, left and right arm are shown
+					- if num_of_lives == 1, head, body, left and right arm, and left leg are shown
+					- if num_of_lives == 0, all body parts are shown
+
+
+				given the requirement, the code can be written as the following: 
+
+
+
+				show_gallow(num_of_lives):
+
+					gallow = ''
+
+					if (num_of_lives == 6):
+
+                        gallow = r"""   +-----+ 
+                                        |     | 
+                                        |      
+                                        |    
+                                        |    
+                                        |      
+                                        |       
+                                     +-----+ """
+
+					elif (num_of_lives == 5):
+
+                        gallow = r"""   +-----+ 
+                                        |     | 
+                                        |     O 
+                                        |     
+                                        |    
+                                        |      
+                                        |       
+                                     +-----+ """
+
+
+					elif (num_of_lives == 4):
+
+                        gallow = r"""   +-----+ 
+                                        |     | 
+                                        |     O 
+                                        |     |
+                                        |    
+                                        |      
+                                        |       
+                                     +-----+ """
+
+					elif (num_of_lives == 3):
+
+                        gallow = r"""   +-----+ 
+                                        |     | 
+                                        |     O 
+                                        |    /|
+                                        |    
+                                        |      
+                                        |       
+                                     +-----+ """
+
+					elif (num_of_lives == 2):
+
+                        gallow = r"""   +-----+ 
+                                        |     | 
+                                        |     O 
+                                        |    /|\
+                                        |    
+                                        |      
+                                        |       
+                                     +-----+ """
+
+					elif (num_of_lives == 1):
+
+                        gallow = r"""   +-----+ 
+                                        |     | 
+                                        |     O 
+                                        |    /|\
+                                        |    /
+                                        |      
+                                        |       
+                                     +-----+ """
+
+					elif (num_of_lives == 0): 
+
+
+                        gallow = r"""   +-----+ 
+                                        |     | 
+                                        |     O 
+                                        |    /|\
+                                        |    / \
+                                        |      
+                                        |       
+                                     +-----+ """
+
+					print(gallow)
+
+
+				Note: the idea of multiline string is referenced from here: 
+				  https://stackoverflow.com/questions/10660435/pythonic-way-to-create-a-long-multi-line-string
+
+			show_hidden_phrase(hidden_phrase)
+			---------------------------------
+				- All elements in hidden_phrase are of string data type
+				- At the end of the function, the hidden phrase is displayed on screen
+
+
+				based on the requirement, the function is defined as the following:
+
+				show_hidden_phrase(hidden_phrase):
+
+					output = ''.join(hidden_phrase)
+
+					print(output)
+
+
+				Note: the solution to the problem of joining elements in array is referenced from here:
+					https://stackoverflow.com/questions/5618878/how-to-convert-list-to-string
+
+
+			make_a_guess()
+			--------------
+				- At the end of the function, it returns the letter of guess made by user
+				- if the guess is other than a letter, then the software prompts user to type again
+
+				
+				Understanding cases:
+				--------------------
+
+				1. User registers input other than letters (i.e. integers and special symbols like @)
+					
+					1.1. Prompt user to type again
+
+				2. User registers input of correct type
+
+					2.1. There are more than one letters
+
+						2.1.1. Prompt user to type again
+
+					2.2. There is only one letter
+
+						2.2.1. return guess
+
+			
+				based on the requirement cases, the function can be defined as the following:
+
+
+				def make_a_guess():
+					
+					exit_prompt = False
+					guess = ''
+
+					while(!exit_prompt)
+						guess = input("Enter a guess ()")
+
+
+					return guess
+
+			
 '''
 
 
