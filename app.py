@@ -58,7 +58,7 @@
 			based on the requirements, the pseudocode can be refined to the following:
 
 			num_of_lives = 6
-			secret_phrase = create_secret_phrase()
+			secret_phrase = create_secret_phrase() x
 			hidden_phrase = generate_hidden_phrase(secret_phrase) x
 			clear_screen() x
 			show_gallow(num_of_lives) x
@@ -164,7 +164,7 @@
 					response = ""
 
 					while(!exit_prompt):
-						user_input = input("Enter Secret Phrase: ")
+						user_input = (input("Enter Secret Phrase: ")).strip()
 						
 						if(!is_valid(user_input)):
 							print("Error: Make sure the input is a phrase")
@@ -173,7 +173,25 @@
 
 				
 					return [x for x in user_input]
-			
+
+			is_valid(secret_phrase)
+			-----------------------
+				- at the end of the function, it returns boolean value
+				- it returns true if there is more than one character and all chars are letters
+				- otherwise, it returns false
+
+				import re
+
+				def is_valid(secret_phrase)
+
+					pattern = r"[^A-Za-z]"
+					match = re.match(pattern, str)
+
+					if(match):
+						return False
+					else:
+						return True
+
 			
 			generate_hidden_phrase(secret_phrase)
 			-------------------------------------
@@ -435,7 +453,6 @@
 
 					return made_correct_guess
 
-
 			update_game(guess, num_of_lives, hidden_phrase, made_correct_guess)
 			-------------------------------------------------------------------
 				- At the end of the function, nothing is returned but values in hidden_phrase and num of lives is updated
@@ -457,6 +474,25 @@
 							i++
 					else:
 						num_of_lives--
+
+			game_is_over(num_of_lives, hidden_phrase, secret_phrase)
+			------------------------------------------------------------
+				- At the end of the function, it returns boolean value 
+				- it returns true if num_of_lives == 0 or hidden_phrase == secret_phrase
+
+
+				based on the requirement, the function is defined as the following:
+
+
+				def game_is_over(num_of_lives, hidden_phrase, secret_phrase):
+
+					result = False
+
+					if(num_of_lives == 0 or hidden_phrase == secret_phrase):
+						result = True
+
+					return result
+
 
 
 			
